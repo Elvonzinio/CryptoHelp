@@ -36,7 +36,6 @@ def Stoch(close, high, low, smoothk, smoothd, n):
 def MACD(df):
     df['macd'] = ta.trend.macd_diff(df.Close)
     df.dropna(inplace=True)
-    #zobacz czy dziala
 
 
 def main():
@@ -45,7 +44,7 @@ def main():
     # mystochrsi = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
     # df['MyStochrsiK'],df['MyStochrsiD'] = mystochrsi
     print(df)
-    #tescik
+
 
 if __name__ == '__main__':
     main()
