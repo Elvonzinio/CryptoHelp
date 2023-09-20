@@ -45,6 +45,7 @@ def main():
     # mystochrsi = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
     # df['MyStochrsiK'],df['MyStochrsiD'] = mystochrsi
     print(df)
+    #tescik
 
 if __name__ == '__main__':
     main()
