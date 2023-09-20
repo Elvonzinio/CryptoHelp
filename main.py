@@ -36,7 +36,7 @@ def Stoch(close, high, low, smoothk, smoothd, n):
 def MACD(df):
     df['macd'] = ta.trend.macd_diff(df.Close)
     df.dropna(inplace=True)
-
+    #zobacz czy dziala
 
 df = getdata('BTCUSDT', '1w', '500')
 # RSI(df)
