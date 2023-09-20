@@ -38,8 +38,13 @@ def MACD(df):
     df.dropna(inplace=True)
     #zobacz czy dziala
 
-df = getdata('BTCUSDT', '1w', '500')
-# RSI(df)
-# mystochrsi = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
-# df['MyStochrsiK'],df['MyStochrsiD'] = mystochrsi
-print(df)
+
+def main():
+    df = getdata('BTCUSDT', '1w', '500')
+    RSI(df)
+    # mystochrsi = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
+    # df['MyStochrsiK'],df['MyStochrsiD'] = mystochrsi
+    print(df)
+
+if __name__ == '__main__':
+    main()
