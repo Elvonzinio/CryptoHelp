@@ -3,6 +3,7 @@ from binance import Client
 import Keys
 import pandas as pd
 import ta
+import requests
 import numpy as np
 import time
 import datetime
@@ -39,11 +40,16 @@ def MACD(df):
 
 
 def main():
-    df = getdata('BTCUSDT', '1w', '500')
-    RSI(df)
-    # mystochrsi = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
-    # df['MyStochrsiK'],df['MyStochrsiD'] = mystochrsi
-    print(df)
+    df = getdata('BTCUSDT', '1w', '2000')
+    #RSI(df)
+    #MACD(df)
+    #mystochrsi = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
+    #df['MyStochrsiK'],df['MyStochrsiD'] = mystochrsi
+    #print(df)
+    r = requests.get('https://api.alternative.me/fng/')
+    fag = r.json()
+    fearAndGreed = fag['data'][0]['value']
+    print(fearAndGreed)
 
 
 if __name__ == '__main__':
