@@ -8,7 +8,10 @@ import numpy as np
 import time
 import datetime
 
+pd.set_option('display.max_columns', None)
+#pd.set_option('display.max_rows', None)
 client = Client(Keys.api_key, Keys.api_secret)
+r = requests.get('https://api.alternative.me/fng/')
 
 
 def getdata(symbol, interval, lookback)->pd.DataFrame:
@@ -22,8 +25,8 @@ def getdata(symbol, interval, lookback)->pd.DataFrame:
 
 
 def RSI(df):
-    df['rsi'] = ta.momentum.rsi(df.Close, window=14)
-    df.dropna(inplace=True)
+    rsi = ta.momentum.rsi(df.Close, window=14)
+    return rsi
 
 
 def Stoch(close, high, low, smoothk, smoothd, n):
@@ -35,21 +38,48 @@ def Stoch(close, high, low, smoothk, smoothd, n):
 
 
 def MACD(df):
-    df['macd'] = ta.trend.macd_diff(df.Close)
-    df.dropna(inplace=True)
+    macd = ta.trend.macd_diff(df.Close)
+    return macd
+
+
+def fearAndGreed(request):
+    fag = request.json()
+    fearAndGreed = fag['data'][0]['value']
+    return fearAndGreed
+
+
+def gaussianChannel(df, source ,window_size=20, std_dev=2, filtered_true_range_multiplier=1.414, reduced_lag_mode=False): #std_dev - odchylenie standardowe
+    df['gaussSMA'] = df[source].rolling(window=window_size).mean()
+    df['StdDev'] = df[source].rolling(window=window_size).std()
+    true_range = df['High'] - df['Low']
+    filtered_true_range = true_range.rolling(window=window_size).mean() * filtered_true_range_multiplier
+
+    if reduced_lag_mode:
+        df['Upper_Channel'] = df['gaussSMA'] + (std_dev * filtered_true_range)
+        df['Lower_Channel'] = df['gaussSMA'] - (std_dev * filtered_true_range)
+    else:
+        df['Upper_Channel'] = df['gaussSMA'] + (std_dev * df['StdDev'])
+        df['Lower_Channel'] = df['gaussSMA'] - (std_dev * df['StdDev'])
+
+    return df
+
+
+def SMA(df, source, window_size):
+    sma = df[source].rolling(window=window_size).mean()
+    return sma
 
 
 def main():
     df = getdata('BTCUSDT', '1w', '2000')
-    #RSI(df)
-    #MACD(df)
-    #mystochrsi = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
-    #df['MyStochrsiK'],df['MyStochrsiD'] = mystochrsi
-    #print(df)
-    r = requests.get('https://api.alternative.me/fng/')
-    fag = r.json()
-    fearAndGreed = fag['data'][0]['value']
-    print(fearAndGreed)
+    #df['sma50'] = SMA(df, 'Close', window_size=50)
+    #df['rsi'] = RSI(df)
+    #df['macd'] = MACD(df)
+    #df['StochK'], df['StochD'] = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
+    df = gaussianChannel(df, 'Close', 20, 2, 1.414, False)
+    #fag = fearAndGreed(r)
+    #print(fag)
+    #df.dropna(inplace=True)
+    print(df)
 
 
 if __name__ == '__main__':
