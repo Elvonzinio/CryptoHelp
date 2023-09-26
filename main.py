@@ -4,11 +4,12 @@ import Keys
 import pandas as pd
 import ta
 import requests
+import matplotlib.pyplot as plt
 import numpy as np
 import time
 import datetime
 
-pd.set_option('display.max_columns', None)
+#pd.set_option('display.max_columns', None)
 #pd.set_option('display.max_rows', None)
 client = Client(Keys.api_key, Keys.api_secret)
 r = requests.get('https://api.alternative.me/fng/')
@@ -17,8 +18,8 @@ r = requests.get('https://api.alternative.me/fng/')
 def getdata(symbol, interval, lookback)->pd.DataFrame:
     frame = pd.DataFrame(client.get_historical_klines(symbol, interval, lookback + ' week ago UTC'))
     frame = frame.iloc[:, :6]
-    frame.columns = ['Time', 'Open', 'High', 'Low', 'Close', 'Volume']
-    frame = frame.set_index('Time')
+    frame.columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume']
+    frame = frame.set_index('Date')
     frame.index = pd.to_datetime(frame.index, unit='ms')
     frame = frame.astype(float)
     return frame
@@ -48,20 +49,16 @@ def fearAndGreed(request):
     return fearAndGreed
 
 
-def gaussianChannel(df, source ,window_size=20, std_dev=2, filtered_true_range_multiplier=1.414, reduced_lag_mode=False): #std_dev - odchylenie standardowe
-    df['gaussSMA'] = df[source].rolling(window=window_size).mean()
-    df['StdDev'] = df[source].rolling(window=window_size).std()
-    true_range = df['High'] - df['Low']
-    filtered_true_range = true_range.rolling(window=window_size).mean() * filtered_true_range_multiplier
+def calculate_gaussian_channel(data, window_size=20, num_std_dev=2):
 
-    if reduced_lag_mode:
-        df['Upper_Channel'] = df['gaussSMA'] + (std_dev * filtered_true_range)
-        df['Lower_Channel'] = df['gaussSMA'] - (std_dev * filtered_true_range)
-    else:
-        df['Upper_Channel'] = df['gaussSMA'] + (std_dev * df['StdDev'])
-        df['Lower_Channel'] = df['gaussSMA'] - (std_dev * df['StdDev'])
+    data['SMA'] = data['Close'].rolling(window=window_size).mean()
 
-    return df
+    data['StdDev'] = data['Close'].rolling(window=window_size).std()
+
+    data['Upper_Channel'] = data['SMA'] + (num_std_dev * data['StdDev'])
+    data['Lower_Channel'] = data['SMA'] - (num_std_dev * data['StdDev'])
+
+    return data
 
 
 def SMA(df, source, window_size):
@@ -69,18 +66,53 @@ def SMA(df, source, window_size):
     return sma
 
 
+def crossCheck(df, shortSMA, longSMA):
+
+    if df[shortSMA].iloc[-1] > df[longSMA].iloc[-1] and df[shortSMA].iloc[-2] <= df[longSMA].iloc[-2]:
+        return 'Cross Up'
+    elif df[shortSMA].iloc[-1] < df[longSMA].iloc[-1] and df[shortSMA].iloc[-2] >= df[longSMA].iloc[-2]:
+        return 'Cross Down'
+    else:
+        return None  # Brak przecięcia
+
+
 def main():
-    df = getdata('BTCUSDT', '1w', '2000')
-    #df['sma50'] = SMA(df, 'Close', window_size=50)
+    df = getdata('BTCUSDT', '1w', '9000')
+    #df['sma30'] = SMA(df, 'Close', window_size=30)
+    #df['sma93'] = SMA(df, 'Close', window_size=93)
     #df['rsi'] = RSI(df)
     #df['macd'] = MACD(df)
     #df['StochK'], df['StochD'] = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
-    df = gaussianChannel(df, 'Close', 20, 2, 1.414, False)
     #fag = fearAndGreed(r)
     #print(fag)
     #df.dropna(inplace=True)
-    print(df)
+    #print(df)
+    #print(crossCheck(df, 'sma30', 'sma93'))
 
+    date_rng = pd.date_range(start='2017-08-14', periods=320, freq='D')
+    close_prices = df['Close']
+    bitcoin_data = pd.DataFrame({'Date': date_rng, 'Close': close_prices})
+
+
+    # Obliczanie granic kanału Gaussa za pomocą funkcji
+    gaussian_data = calculate_gaussian_channel(bitcoin_data, window_size=70, num_std_dev=0.5)
+
+    # Wyświetlenie wyników
+    print(gaussian_data)
+
+    # Wykres cen zamknięcia, SMA oraz granic kanału Gaussa
+    x = gaussian_data['Date']
+    plt.figure(figsize=(12, 6))
+    plt.plot(x, gaussian_data['Close'], label='Ceny zamknięcia', color='blue')
+    plt.plot(x, gaussian_data['SMA'], label=f'SMA (70-dniowa)', color='orange')
+    plt.plot(x, gaussian_data['Upper_Channel'], label=f'Górny Kanał (2x StdDev)', color='red', linestyle='--')
+    plt.plot(x, gaussian_data['Lower_Channel'], label=f'Dolny Kanał (2x StdDev)', color='green', linestyle='--')
+    plt.title('Kanał Gaussa dla Bitcoina')
+    plt.xlabel('Data')
+    plt.ylabel('Cena')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 if __name__ == '__main__':
     main()
