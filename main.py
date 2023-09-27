@@ -49,7 +49,7 @@ def fearAndGreed(request):
     return fearAndGreed
 
 
-def calculate_gaussian_channel(data, window_size=20, num_std_dev=2):
+def gaussianChannel(data, window_size=20, num_std_dev=2):
 
     data['SMA'] = data['Close'].rolling(window=window_size).mean()
 
