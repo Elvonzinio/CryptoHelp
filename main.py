@@ -75,7 +75,12 @@ def crossCheck(df, shortSMA, longSMA):
         return None  # Brak przecięcia
 
 
+def buysell(df):
+    pass
+
+
 def main():
+    daily = getdata('BTCUSDT', '1d', '9000')
     df = getdata('BTCUSDT', '1w', '9000')
     #df['sma30'] = SMA(df, 'Close', window_size=30)
     #df['sma93'] = SMA(df, 'Close', window_size=93)
