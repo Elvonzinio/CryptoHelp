@@ -94,7 +94,6 @@ def main():
     #print(crossCheck(df, 'sma30', 'sma93'))
 
 
-
 if __name__ == '__main__':
     main()
 

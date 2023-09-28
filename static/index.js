@@ -31,6 +31,16 @@ function createSimpleSwitcher(items, activeItem, activeItemChangedCallback) {
   return switcherElement;
 }
 
+fetch('/home')  // Wywołaj trasę, która zwraca plik JSON
+    .then(response => response.json())
+    .then(data => {
+        // Tutaj możesz przetwarzać dane JSON w JavaScript
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('JSON data error:', error);
+    });
+
 
 var intervals = ['1D', '1W', '1M', '1Y'];
 
