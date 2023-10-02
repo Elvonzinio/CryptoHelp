@@ -5,11 +5,17 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <script type="text/javascript" src="https://unpkg.com/lightweight-charts@4.0/dist/lightweight-charts.standalone.production.js"></script>
+    <script>
+        var dailyData = {{ dailyDataJSON | tojson | safe }};
+        var weeklyData = {{ weeklyDataJSON | tojson | safe }};
+        var monthlyData = {{ monthlyDataJSON | tojson | safe }};
+    </script>
 </head>
 <body>
     <div><h1>home</h1></div>
-
-
     <script type="text/javascript" src="/static/index.js"></script>
+
+
+
 </body>
 </html>

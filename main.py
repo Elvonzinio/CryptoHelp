@@ -93,32 +93,33 @@ def main():
     #print(df)
     #print(crossCheck(df, 'sma30', 'sma93'))
 
+    date_rng = pd.date_range(start='2017-08-14', periods=320, freq='D')
+    close_prices = df['Close']
+    bitcoin_data = pd.DataFrame({'Date': date_rng, 'Close': close_prices})
+
+
+    # Obliczanie granic kanału Gaussa za pomocą funkcji
+    gaussian_data = gaussianChannel(bitcoin_data, window_size=70, num_std_dev=0.5)
+
+    # Wyświetlenie wyników
+    print(gaussian_data)
+
+    # Wykres cen zamknięcia, SMA oraz granic kanału Gaussa
+    x = gaussian_data['Date']
+    plt.figure(figsize=(12, 6))
+    plt.plot(x, gaussian_data['Close'], label='Ceny zamknięcia', color='blue')
+    plt.plot(x, gaussian_data['SMA'], label=f'SMA (70-dniowa)', color='orange')
+    plt.plot(x, gaussian_data['Upper_Channel'], label=f'Górny Kanał (2x StdDev)', color='red', linestyle='--')
+    plt.plot(x, gaussian_data['Lower_Channel'], label=f'Dolny Kanał (2x StdDev)', color='green', linestyle='--')
+    plt.title('Kanał Gaussa dla Bitcoina')
+    plt.xlabel('Data')
+    plt.ylabel('Cena')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
 
 if __name__ == '__main__':
     main()
 
 
-    # date_rng = pd.date_range(start='2017-08-14', periods=320, freq='D')
-    # close_prices = df['Close']
-    # bitcoin_data = pd.DataFrame({'Date': date_rng, 'Close': close_prices})
-    #
-    #
-    # # Obliczanie granic kanału Gaussa za pomocą funkcji
-    # gaussian_data = calculate_gaussian_channel(bitcoin_data, window_size=70, num_std_dev=0.5)
-    #
-    # # Wyświetlenie wyników
-    # print(gaussian_data)
-    #
-    # # Wykres cen zamknięcia, SMA oraz granic kanału Gaussa
-    # x = gaussian_data['Date']
-    # plt.figure(figsize=(12, 6))
-    # plt.plot(x, gaussian_data['Close'], label='Ceny zamknięcia', color='blue')
-    # plt.plot(x, gaussian_data['SMA'], label=f'SMA (70-dniowa)', color='orange')
-    # plt.plot(x, gaussian_data['Upper_Channel'], label=f'Górny Kanał (2x StdDev)', color='red', linestyle='--')
-    # plt.plot(x, gaussian_data['Lower_Channel'], label=f'Dolny Kanał (2x StdDev)', color='green', linestyle='--')
-    # plt.title('Kanał Gaussa dla Bitcoina')
-    # plt.xlabel('Data')
-    # plt.ylabel('Cena')
-    # plt.legend()
-    # plt.grid(True)
-    # plt.show()

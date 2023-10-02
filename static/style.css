@@ -4,6 +4,11 @@ h1 {
     color: green;
 }
 
+.tv-lightweight-charts {
+    border-radius: 20px;
+
+}
+
 .switcher {
 	display: flex;
 	align-items: center;
