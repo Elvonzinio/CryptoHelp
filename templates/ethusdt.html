@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script type="text/javascript" src="https://unpkg.com/lightweight-charts@4.0/dist/lightweight-charts.standalone.production.js"></script>
+    <script>
+        var dailyData = {{ dailyDataJSON | tojson | safe }};
+        var weeklyData = {{ weeklyDataJSON | tojson | safe }};
+        var monthlyData = {{ monthlyDataJSON | tojson | safe }};
+
+        dailyData = JSON.parse(dailyData);
+        dailyData = dailyData.data;
+
+        weeklyData = JSON.parse(weeklyData);
+        weeklyData = weeklyData.data;
+
+        monthlyData = JSON.parse(monthlyData);
+        monthlyData = monthlyData.data;
+
+        function showrsi(){
+            document.getElementById('rsichart').style.display ='block';
+            document.getElementById('stochchart').style.display = 'none';
+        }
+        function showstoch(){
+            document.getElementById('stochchart').style.display ='block';
+            document.getElementById('rsichart').style.display = 'none';
+        }
+    </script>
+</head>
+<body>  <!--onload="showrsi()"-->
+    <script type="text/javascript" src="/static/mainChart.js"></script>
+
+    <div id="radio">
+        <input type="radio" name="tab" value="rsi" checked="checked" onclick="showrsi();" />Show rsi<br>
+        <input type="radio" name="tab" value="stoch" onclick="showstoch();" />Show stochastic rsi<br>
+    </div>
+
+    <script>
+        function synchronizeCharts(charts) {
+            charts.forEach((chart, index) => {
+                chart.subscribeCrosshairMove((param) => {
+                    if (param.time) {
+                        const timeRange = chart.timeScale().getVisibleRange();
+
+                        charts.forEach((otherChart, otherIndex) => {
+                            if (otherIndex !== index) {
+                                otherChart.timeScale().setVisibleRange(timeRange);
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        const allCharts = [
+        chart1,
+        chartRSI,
+        chartStoch,
+        chartMACD,
+        chartPiCycleTop,
+        chartPiCycleBottom,
+        chartVolatility,
+        chartRci3Lines
+        ];
+
+        synchronizeCharts(allCharts);
+    </script>
+
+<!--    -->
+</body>
+</html>

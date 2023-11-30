@@ -3,19 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
-    <script type="text/javascript" src="https://unpkg.com/lightweight-charts@4.0/dist/lightweight-charts.standalone.production.js"></script>
+    <script type="text/javascript"
+            src="https://unpkg.com/lightweight-charts@4.0/dist/lightweight-charts.standalone.production.js"></script>
     <script>
         var dailyData = {{ dailyDataJSON | tojson | safe }};
         var weeklyData = {{ weeklyDataJSON | tojson | safe }};
         var monthlyData = {{ monthlyDataJSON | tojson | safe }};
+
+        dailyData = JSON.parse(dailyData);
+        dailyData = dailyData.data;
+
+        weeklyData = JSON.parse(weeklyData);
+        weeklyData = weeklyData.data;
+
+        monthlyData = JSON.parse(monthlyData);
+        monthlyData = monthlyData.data;
+
+
+        function showChart(chartId, infoId, buttonId) {
+            ['rsichart', 'stochchart', 'macdchart', 'picycletop', 'picyclebottom', 'volatilitychart'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+
+            ['inforsi', 'infostochrsi', 'infomacd', 'infotop', 'infobottom', 'infovolatility'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+
+            document.getElementById(chartId).style.display = 'flex';
+            document.getElementById(infoId).style.display = 'block';
+
+            ['rsibutton', 'stochbutton', 'macdbutton', 'topbutton', 'bottombutton', 'volatilitybutton'].forEach(id => {
+                document.getElementById(id).className = 'button-item';
+            });
+            document.getElementById(buttonId).className = 'button-item button-active-item';
+        }
+
+        function showrsi() {
+            showChart('rsichart', 'inforsi', 'rsibutton');
+        }
+
+        function showstoch() {
+            showChart('stochchart', 'infostochrsi', 'stochbutton');
+        }
+
+        function showmacd() {
+            showChart('macdchart', 'infomacd', 'macdbutton');
+        }
+
+        function showtop() {
+            showChart('picycletop', 'infotop', 'topbutton');
+        }
+
+        function showbottom() {
+            showChart('picyclebottom', 'infobottom', 'bottombutton');
+        }
+
+        function showvolatility() {
+            showChart('volatilitychart', 'infovolatility', 'volatilitybutton');
+        }
+
     </script>
 </head>
-<body>
-    <div><h1>home</h1></div>
-    <script type="text/javascript" src="/static/index.js"></script>
+<body onload="showrsi()">  <!--onload="showrsi()"-->
+<div class="header">
+    <h1 class="currency">
+        BTC/USDT
+        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" alt="btc" class="btcimg">
+        <div class="arrow" id="downarrow">
+            &#129171
+        </div>
+    </h1>
+    <button id="themeToggleButton">Change theme</button>
+</div>
 
+<div id="menu" class="menu">
+    <table>
+        <tr>
+            <th class="roundth1">Name</th>
+            <th>Price (USDT)</th>
+            <th>Change (week)</th>
+            <th class="roundth2">Volume</th>
+        </tr>
+        <tr data-target="/BTCUSDT">
+            <td><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" alt="btc" class="btcimgtable">Bitcoin
+                <div class="shortname">BTC</div>
+            </td>
+            <td class="{% if btcChange > 0 %}positive{% else %}negative{% endif %}">{{ btcPrice }}</td>
+            <td class="{{ 'positive' if btcChange > 0 else 'negative' }}">
+                {{ ('+' if btcChange > 0 else '') ~ btcChange }}%
+            </td>
 
+            <td>{{ btcVolume }}</td>
+        </tr>
+        <tr data-target="/ETHUSDT">
+            <td><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png" alt="eth" class="ethimgtable">Ethereum
+                <div class="shortname">ETH</div>
+            </td>
+            <td class="{% if ethChange > 0 %}positive{% else %}negative{% endif %}">{{ ethPrice }}</td>
+            <td class="{{ 'positive' if ethChange > 0 else 'negative' }}">
+                {{ ('+' if ethChange > 0 else '') ~ ethChange }}%
+            </td>
+            <td>{{ ethVolume }}</td>
+        </tr>
+    </table>
+</div>
 
+<div id="buttons">
+    <input type="button" id="rsibutton" class="button-item button-active-item" name="tab" value="RSI" onclick="showrsi();"/>
+    <input type="button" id="stochbutton" class="button-item" name="tab" value="STOCHASTIC RSI" onclick="showstoch();"/>
+    <input type="button" id="macdbutton" class="button-item" name="tab" value="MACD" onclick="showmacd();"/>
+    <input type="button" id="topbutton" class="button-item" name="tab" value="PI CYCLE TOP" onclick="showtop();"/>
+    <input type="button" id="bottombutton" class="button-item" name="tab" value="PI CYCLE BOTTOM" onclick="showbottom();"/>
+    <input type="button" id="volatilitybutton" class="button-item" name="tab" value="VOLATILITY" onclick="showvolatility();"/>
+</div>
+<script type="text/javascript" src="/static/mainChart.js"></script>
+
+<div class="footerspace">
+
+</div>
+
+<div class="footer">
+    <marquee class="moveinfo" direction="right" loop="infinite" behavior="scroll" scrollamount="6">
+        <div class="footershortname">BTC</div>
+        <div class="{% if btcChange > 0 %}positive{% else %}negative{% endif %}">{{ btcPrice }} USDT</div>
+        <div class="{{ 'positive' if btcChange > 0 else 'negative' }}">
+            {{ ('+' if btcChange > 0 else '') ~ btcChange }}%/Week
+        </div>
+        <div class="footershortname">ETH</div>
+        <div class="{% if ethChange > 0 %}positive{% else %}negative{% endif %}">{{ ethPrice }} USDT</div>
+        <div class="{{ 'positive' if ethChange > 0 else 'negative' }}">
+            {{ ('+' if ethChange > 0 else '') ~ ethChange }}%/Week
+        </div>
+    </marquee>
+</div>
+
+<script>
+        function synchronizeCharts(charts) {
+            charts.forEach((chart, index) => {
+                chart.subscribeCrosshairMove((param) => {
+                    if (param.time) {
+                        const timeRange = chart.timeScale().getVisibleRange();
+
+                        charts.forEach((otherChart, otherIndex) => {
+                            if (otherIndex !== index) {
+                                otherChart.timeScale().setVisibleRange(timeRange);
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        const allCharts = [
+        chart1,
+        chartRSI,
+        chartStoch,
+        chartMACD,
+        chartPiCycleTop,
+        chartPiCycleBottom,
+        chartVolatility,
+        chartRci3Lines
+        ];
+
+        synchronizeCharts(allCharts);
+</script>
+<script type="text/javascript" src="/static/index.js"></script>
+
+<!--    -->
 </body>
 </html>
