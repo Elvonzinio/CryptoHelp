@@ -129,27 +129,27 @@ def change(last, before):
 
 
 def main():
-    dfDay = getdata('BTCUSDT', '1d', '9000')
-    # df = getdata('BTCUSDT', '1w', '9000')
-    dfDay['rsi'] = RSI(dfDay)
-    dfDay['macd'] = MACD(dfDay)
-    dfDay['StochK'], dfDay['StochD'] = Stoch(dfDay.rsi, dfDay.rsi, dfDay.rsi, 3, 3, 14)
-    # bottom
-    dfDay['longSMA471'] = SMA(dfDay, 'Close', window_size=471)
-    dfDay['shortSMA150'] = SMA(dfDay, 'Close', window_size=150)
-    # top
-    dfDay['longSMA350'] = SMA(dfDay, 'Close', window_size=350)
-    dfDay['shortSMA111'] = SMA(dfDay, 'Close', window_size=111)
-    e = picycle(dfDay)
-    print(e)
+    # dfDay = getdata('BTCUSDT', '1d', '9000')
+    # # df = getdata('BTCUSDT', '1w', '9000')
+    # dfDay['rsi'] = RSI(dfDay)
+    # dfDay['macd'] = MACD(dfDay)
+    # dfDay['StochK'], dfDay['StochD'] = Stoch(dfDay.rsi, dfDay.rsi, dfDay.rsi, 3, 3, 14)
+    # # bottom
+    # dfDay['longSMA471'] = SMA(dfDay, 'Close', window_size=471)
+    # dfDay['shortSMA150'] = SMA(dfDay, 'Close', window_size=150)
+    # # top
+    # dfDay['longSMA350'] = SMA(dfDay, 'Close', window_size=350)
+    # dfDay['shortSMA111'] = SMA(dfDay, 'Close', window_size=111)
+    # e = picycle(dfDay)
+    # print(e)
     # df['volatility'] = volatility(df)
     # df['sma35'] = SMA(df, 'Close', window_size=35)
     # df['sma93'] = SMA(df, 'Close', window_size=93)
     # df['rsi'] = RSI(df)
     # df['macd'] = MACD(df)
     # df['StochK'], df['StochD'] = Stoch(df.rsi, df.rsi, df.rsi, 3, 3, 14)
-    # fag = fearAndGreed(r)
-    # print(fag)
+    fag = fearAndGreed(r)
+    print(fag)
     # df.dropna(inplace=True)
     # print(df)
     # print(crossCheck(df, 'sma35', 'sma93'))

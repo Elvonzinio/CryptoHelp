@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>BTC/USDT</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
@@ -66,9 +66,18 @@
         }
 
     </script>
+    <style>
+        progress::after {
+        content: '{{ fag }}/100';
+        }
+    </style>
 </head>
 <body onload="showrsi()">  <!--onload="showrsi()"-->
 <div class="header">
+    <div id="fag">
+        <span>FEAR AND GREED INDEX</span><br>
+        <progress value="{{ fag }}" max="100"></progress>
+    </div>
     <h1 class="currency">
         BTC/USDT
         <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" alt="btc" class="btcimg">
@@ -85,7 +94,7 @@
             <th class="roundth1">Name</th>
             <th>Price (USDT)</th>
             <th>Change (week)</th>
-            <th class="roundth2">Volume</th>
+            <th class="roundth2">Volume (24h)</th>
         </tr>
         <tr data-target="/BTCUSDT">
             <td><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" alt="btc" class="btcimgtable">Bitcoin
@@ -120,6 +129,78 @@
     <input type="button" id="volatilitybutton" class="button-item" name="tab" value="VOLATILITY" onclick="showvolatility();"/>
 </div>
 <script type="text/javascript" src="/static/mainChart.js"></script>
+
+<div id="rsibuysell" class="buysell">
+    <button id="closeButtonRsi" class="closeButton">&times;</button><br><br>
+    <p>BUY CONDITIONS<p>
+    <span>Weekly RSI level bellow 30</span><br><br>
+    <p>SELL CONDITIONS<p>
+    <span>-</span>
+    <div class="reminder">
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already sold don't buy back in current bull market<br>
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already bought don't sell in current bear market
+    </div>
+</div>
+
+<div id="stochbuysell" class="buysell">
+    <button id="closeButtonStoch" class="closeButton">&times;</button><br><br>
+    <p>BUY CONDITIONS<p>
+    <span>-</span><br><br>
+    <p>SELL CONDITIONS<p>
+    <span>-</span>
+    <div class="reminder">
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already sold don't buy back in current bull market<br>
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already bought don't sell in current bear market
+    </div>
+</div>
+
+<div id="macdbuysell" class="buysell">
+    <button id="closeButtonMacd" class="closeButton">&times;</button><br><br>
+    <p>BUY CONDITIONS<p>
+    <span>Monthly MACD switch from dark red to light red (last moment to enter the market)</span><br><br>
+    <p>SELL CONDITIONS<p>
+    <span>Monthly MACD switch from dark green to light green (last moment to leave the market)</span>
+    <div class="reminder">
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already sold don't buy back in current bull market<br>
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already bought don't sell in current bear market
+    </div>
+</div>
+
+<div id="pitopbuysell" class="buysell">
+    <button id="closeButtonPiTop" class="closeButton">&times;</button><br><br>
+    <p>BUY CONDITIONS<p>
+    <span>-</span><br><br>
+    <p>SELL CONDITIONS<p>
+    <span>White line cross yellow line from above</span>
+    <div class="reminder">
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already sold don't buy back in current bull market<br>
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already bought don't sell in current bear market
+    </div>
+</div>
+
+<div id="pibottombuysell" class="buysell">
+    <button id="closeButtonPiBottom" class="closeButton">&times;</button><br><br>
+    <p>BUY CONDITIONS<p>
+    <span>Green line cross red line from above</span><br><br>
+    <p>SELL CONDITIONS<p>
+    <span>-</span>
+    <div class="reminder">
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already sold don't buy back in current bull market<br>
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already bought don't sell in current bear market
+    </div>
+</div>
+
+<div id="volatilitybuysell" class="buysell">
+    <button id="closeButtonVolatility" class="closeButton">&times;</button><br><br>
+    <p>BUY CONDITIONS<p>
+    <span>Weekly volatility bellow 30 level predicts big moves incoming</span><br><br>
+    <p>SELL CONDITIONS<p>
+    <span>-</span>
+    <div class="reminder">
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already sold don't buy back in current bull market<br>
+        <i class='fas fa-exclamation-triangle' style='font-size:24px'></i> if you already bought don't sell in current bear market
+    </div>
+</div>
 
 <div class="footerspace">
 

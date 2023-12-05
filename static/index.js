@@ -29,4 +29,24 @@ themeToggleButton.addEventListener('click', () => {
     }
 });
 
+//guziki zamykania
+function setupInfoIconEvents(iconId, buysellId, closeButtonId) {
+    var icon = document.getElementById(iconId);
+    var buysellInfo = document.getElementById(buysellId);
+    var closeButton = document.getElementById(closeButtonId);
 
+    icon.addEventListener('click', function () {
+        buysellInfo.style.display = 'block';
+
+        closeButton.addEventListener('click', function () {
+            buysellInfo.style.display = 'none';
+        });
+    });
+}
+
+setupInfoIconEvents('infoiconrsi', 'rsibuysell', 'closeButtonRsi');
+setupInfoIconEvents('infostochiconrsi', 'stochbuysell', 'closeButtonStoch');
+setupInfoIconEvents('infoiconmacd', 'macdbuysell', 'closeButtonMacd');
+setupInfoIconEvents('infoicontop', 'pitopbuysell', 'closeButtonPiTop');
+setupInfoIconEvents('infoiconbottom', 'pibottombuysell', 'closeButtonPiBottom');
+setupInfoIconEvents('infoiconvolatility', 'volatilitybuysell', 'closeButtonVolatility');

@@ -529,6 +529,7 @@ infoRsi.setAttribute("class", "infoall");
 infoRsi.innerText = "RSI";
 var infoIconRsi = document.createElement('i');
 infoIconRsi.classList.add('fas', 'fa-info-circle', 'info-icon', 'infoiconrsi');
+infoIconRsi.id = 'infoiconrsi';
 infoRsi.appendChild(infoIconRsi);
 
 var chartStochElement = document.createElement('div');
@@ -540,6 +541,7 @@ infoStochRsi.setAttribute("class", "infoall");
 infoStochRsi.innerText = "Stochastic RSI";
 var infoIconStochRsi = document.createElement('i');
 infoIconStochRsi.classList.add('fas', 'fa-info-circle', 'info-icon', 'infostochiconrsi');
+infoIconStochRsi.id = 'infostochiconrsi';
 infoStochRsi.appendChild(infoIconStochRsi);
 
 var chartMacdElement = document.createElement('div');
@@ -551,6 +553,7 @@ infoMacd.setAttribute("class", "infoall");
 infoMacd.innerText = "MACD";
 var infoIconMacd = document.createElement('i');
 infoIconMacd.classList.add('fas', 'fa-info-circle', 'info-icon', 'infoiconmacd');
+infoIconMacd.id = 'infoiconmacd';
 infoMacd.appendChild(infoIconMacd);
 
 var chartPiCycleTopElement = document.createElement('div');
@@ -562,6 +565,7 @@ infoTop.setAttribute("class", "infoall");
 infoTop.innerText = "Pi Cycle Top";
 var infoIconTop = document.createElement('i');
 infoIconTop.classList.add('fas', 'fa-info-circle', 'info-icon', 'infoicontop');
+infoIconTop.id = 'infoicontop';
 infoTop.appendChild(infoIconTop);
 
 var chartPiCycleBottomElement = document.createElement('div');
@@ -573,6 +577,7 @@ infoBottom.setAttribute("class", "infoall");
 infoBottom.innerText = "Pi Cycle Bottom";
 var infoIconBottom = document.createElement('i');
 infoIconBottom.classList.add('fas', 'fa-info-circle', 'info-icon', 'infoiconbottom');
+infoIconBottom.id = 'infoiconbottom';
 infoBottom.appendChild(infoIconBottom);
 
 var chartVolatilityElement = document.createElement('div');
@@ -584,6 +589,7 @@ infoVolatility.setAttribute("class", "infoall");
 infoVolatility.innerText = "Volatility";
 var infoIconVolatility = document.createElement('i');
 infoIconVolatility.classList.add('fas', 'fa-info-circle', 'info-icon', 'infoiconvolatility');
+infoIconVolatility.id = 'infoiconvolatility';
 infoVolatility.appendChild(infoIconVolatility);
 
 var chartRci3LinesElement = document.createElement('div');

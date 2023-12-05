@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, jsonify
 from main import getdata, RSI, Stoch, MACD, fearAndGreed, RCI3Lines, SMA, EMA, crossCheck, picycle, \
-    historical_volatility, change
+    historical_volatility, change, r
 import main
 import json
 
@@ -63,6 +63,7 @@ def index():
     btcVolume = dfDay['Volume'].iloc[-1]
     btcVolume = round(btcVolume, 2)
 
+    fag = fearAndGreed(r)
 
     return render_template('index.html', dailyDataJSON=daily,
                            weeklyDataJSON=weekly,
@@ -72,7 +73,8 @@ def index():
                            ethVolume=ethVolume,
                            btcPrice=btcPriceLast,
                            btcChange=btcChange,
-                           btcVolume=btcVolume)
+                           btcVolume=btcVolume,
+                           fag=fag)
 
 
 @views.route('/ETHUSDT')
@@ -90,14 +92,14 @@ def indexeth():
     dfDay['longSMA350'] = SMA(dfDay, 'Close', window_size=350) * 2
     dfDay['shortSMA111'] = SMA(dfDay, 'Close', window_size=111)
 
-    dfWeek = getdata('BTCUSDT', '1w', '99999')
+    dfWeek = getdata('ETHUSDT', '1w', '99999')
     dfWeek['rsi'] = RSI(dfWeek)
     dfWeek['macd'] = MACD(dfWeek)
     dfWeek['StochK'], dfWeek['StochD'] = Stoch(dfWeek.rsi, dfWeek.rsi, dfWeek.rsi, 3, 3, 14)
     dfWeek['volatility'] = historical_volatility(dfWeek, 'Close', length=10, per=7)
     dfWeek['rciShort'], dfWeek['rciMiddle'], dfWeek['rciLong'] = RCI3Lines(dfWeek['Close'])
 
-    dfMonth = getdata('BTCUSDT', '1M', '99999')
+    dfMonth = getdata('ETHUSDT', '1M', '99999')
     dfMonth['rsi'] = RSI(dfMonth)
     dfMonth['macd'] = MACD(dfMonth)
     dfMonth['StochK'], dfMonth['StochD'] = Stoch(dfMonth.rsi, dfMonth.rsi, dfMonth.rsi, 3, 3, 14)
