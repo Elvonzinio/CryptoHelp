@@ -1,27 +1,28 @@
+import datetime
+import statistics as st
+import time
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import requests
+import ta
 from binance import Client
 
 import Keys
-import pandas as pd
-import ta
-import requests
-import matplotlib.pyplot as plt
-import numpy as np
-import statistics as st
-import time
-import datetime
 
 # pd.set_option('display.max_columns', None)
 # pd.set_option('display.max_rows', None)
 client = Client(Keys.api_key, Keys.api_secret)
-r = requests.get('https://api.alternative.me/fng/')
+r = requests.get("https://api.alternative.me/fng/")
 
 
 def getdata(symbol, interval, lookback) -> pd.DataFrame:
-    frame = pd.DataFrame(client.get_historical_klines(symbol, interval, lookback + ' week ago UTC'))
+    frame = pd.DataFrame(client.get_historical_klines(symbol, interval, lookback + " week ago UTC"))
     frame = frame.iloc[:, :6]
-    frame.columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume']
-    frame = frame.set_index('Date')
-    frame.index = pd.to_datetime(frame.index, unit='ms')
+    frame.columns = ["Date", "Open", "High", "Low", "Close", "Volume"]
+    frame = frame.set_index("Date")
+    frame.index = pd.to_datetime(frame.index, unit="ms")
     frame = frame.astype(float)
     return frame
 
@@ -46,7 +47,7 @@ def MACD(df):
 
 def fearAndGreed(request):
     fag = request.json()
-    fearAndGreed = fag['data'][0]['value']
+    fearAndGreed = fag["data"][0]["value"]
     return fearAndGreed
 
 
@@ -61,18 +62,18 @@ def EMA(df, source, window_size):
 
 
 def picycle(df):  # musi byc daily
-    bottomcheck = crossCheck(df, 'shortSMA150', 'longSMA471')
-    topcheck = crossCheck(df, 'shortSMA111', 'longSMA350')
+    bottomcheck = crossCheck(df, "shortSMA150", "longSMA471")
+    topcheck = crossCheck(df, "shortSMA111", "longSMA350")
 
-    if bottomcheck == 'Crossdown':
-        return 'PiCycleLow'
-    elif topcheck == 'Crossup':
-        return 'PiCycleHigh'
+    if bottomcheck == "Crossdown":
+        return "PiCycleLow"
+    elif topcheck == "Crossup":
+        return "PiCycleHigh"
     else:
         return None
 
 
-def historical_volatility(df, source, length, per):  # zmienic lekko prog
+def historical_volatility(df, source, length, per):
     annual = 365
     log_returns = np.log(df[source] / df[source].shift(1))
     rolling_stdev = log_returns.rolling(length).std()
@@ -112,9 +113,9 @@ def RCI3Lines(src, itvs=9, itvm=36, itvl=52):
 
 def crossCheck(df, shortSMA, longSMA):
     if df[shortSMA].iloc[-1] > df[longSMA].iloc[-1] and df[shortSMA].iloc[-2] <= df[longSMA].iloc[-2]:
-        return 'Crossup'  # jak short przebija od dolu longa
+        return "Crossup"  # jak short przebija od dolu longa
     elif df[shortSMA].iloc[-1] < df[longSMA].iloc[-1] and df[shortSMA].iloc[-2] >= df[longSMA].iloc[-2]:
-        return 'Crossdown'  # jak short przebija od gory longa
+        return "Crossdown"  # jak short przebija od gory longa
     else:
         return None  # Brak przecięcia
 
@@ -130,7 +131,7 @@ def change(last, before):
 
 def main():
     # dfDay = getdata('BTCUSDT', '1d', '9000')
-    # # df = getdata('BTCUSDT', '1w', '9000')
+    df = getdata('BTCUSDT', '1w', '9000')
     # dfDay['rsi'] = RSI(dfDay)
     # dfDay['macd'] = MACD(dfDay)
     # dfDay['StochK'], dfDay['StochD'] = Stoch(dfDay.rsi, dfDay.rsi, dfDay.rsi, 3, 3, 14)
@@ -151,9 +152,9 @@ def main():
     fag = fearAndGreed(r)
     print(fag)
     # df.dropna(inplace=True)
-    # print(df)
+    print(df)
     # print(crossCheck(df, 'sma35', 'sma93'))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
