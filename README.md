@@ -1,7 +1,7 @@
-﻿# System wspomagania podejmowania decyzji na giełdzie kryptowalut
+# Cryptocurrency Exchange Decision Support System
 
-Aby uruchomic program main należy utworzyc w folderze głównym plik o nazwie Keys.py i wkleic tam klucze API z giełdy Binance.
-api_key = 'przykladowykluczapi1'
-api_secret = 'przykladowykluczapi2'
+To run the main program, you need to create a file named Keys.py in the main folder and paste the Binance API keys there.
+api_key = 'exampleapikey1'
+api_secret = 'exampleapisecret2'
 
-Po uruchomieniu programu należy wkleić link w przeglądarkę http://127.0.0.1:5000/BTCUSDT
+After launching the program, paste the following link into your browser: http://127.0.0.1:5000/BTCUSDT
